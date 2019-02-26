@@ -1,0 +1,8 @@
+###
+# Developer Specific Environment Variables
+##
+
+export GOOS=darwin
+export GOARCH=amd64
+
+# vi:syntax=sh
