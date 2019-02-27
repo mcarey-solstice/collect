@@ -7,32 +7,39 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 )
 
-func DownloadFile(uri string, filepath string) error {
+func DownloadFile(uri string, path string) error {
 	u, e := url.Parse(uri)
 	if e != nil {
 		return e
 	}
 
+	// Create the directory needed
+	err := os.MkdirAll(filepath.Dir(path), 0755)
+	if err != nil {
+		return err
+	}
+
 	switch u.Scheme {
 	case "file":
-		return FileGet(u, filepath)
+		return FileGet(u, path)
 	case "http":
-		return HttpGet(u, filepath)
+		return HttpGet(u, path)
 	case "https":
-		return HttpGet(u, filepath)
+		return HttpGet(u, path)
 	default:
 		return errors.New(fmt.Sprintf("Unknown scheme: %s", u.Scheme))
 	}
 }
 
-func FileGet(uri *url.URL, filepath string) error {
+func FileGet(uri *url.URL, path string) error {
 	fmt.Printf("Fetching data from file: %s\n", uri)
 
-	fmt.Printf("Creating file: %s\n", filepath)
+	fmt.Printf("Creating file: %s\n", path)
 	// Create the file
-	out, err := os.Create(filepath)
+	out, err := os.Create(path)
 	if err != nil {
 		return err
 	}
@@ -48,7 +55,7 @@ func FileGet(uri *url.URL, filepath string) error {
 	return err
 }
 
-func HttpGet(uri *url.URL, filepath string) error {
+func HttpGet(uri *url.URL, path string) error {
 	fmt.Printf("Fetching data from http: %s\n", uri)
 	// Get the data
 	resp, err := http.Get(uri.String())
@@ -57,9 +64,9 @@ func HttpGet(uri *url.URL, filepath string) error {
 	}
 	defer resp.Body.Close()
 
-	fmt.Printf("Creating file: %s\n", filepath)
+	fmt.Printf("Creating file: %s\n", path)
 	// Create the file
-	out, err := os.Create(filepath)
+	out, err := os.Create(path)
 	if err != nil {
 		return err
 	}

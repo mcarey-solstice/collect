@@ -7,10 +7,6 @@ import (
 	"github.com/mcarey-solstice/collect/schema"
 )
 
-const (
-	DEFAULT_COLLECTION_DIRECTORY = ".collect"
-)
-
 func Exists(file string) bool {
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return false
