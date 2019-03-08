@@ -2,6 +2,7 @@ package file
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -38,5 +39,5 @@ func HashFileWithSha256(file *os.File) (string, error) {
 		return "", e
 	}
 
-	return string(hash.Sum(nil)), nil
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }

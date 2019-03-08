@@ -37,12 +37,24 @@ func Collect(file string, item *schema.Item) error {
 		if h != item.Hash.Value {
 			// If the hash does not match, download it
 			fmt.Printf("Hash of %s does not match. Redownloading from: %s\n", file, item.Url)
-			DownloadFile(item.Url, file)
+			fmt.Printf("%s != %s", h, item.Hash.Value)
+			return downloadFile(item.Url, file, item.Mode)
 		}
 	} else {
 		fmt.Printf("%s does not exist. Downloading from: %s\n", file, item.Url)
-		DownloadFile(item.Url, file)
+		return downloadFile(item.Url, file, item.Mode)
 	}
 
 	return nil
+}
+
+func downloadFile(url string, file string, mode os.FileMode) error {
+	var err error
+
+	DownloadFile(url, file)
+	if mode != 0 {
+		err = os.Chmod(file, mode)
+	}
+
+	return err
 }

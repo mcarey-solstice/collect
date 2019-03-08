@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"errors"
 	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v2"
 )
@@ -17,7 +18,7 @@ type Hash struct {
 type Item struct {
 	Url string `yaml:"url"`
 	Hash Hash `yaml:"hash"`
-	Unpack bool `yaml:"unpack"`
+	Mode os.FileMode `yaml:"mode"`
 }
 
 func VerifyCollection(collection map[string]Item) error {
